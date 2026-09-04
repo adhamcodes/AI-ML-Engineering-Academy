@@ -2,6 +2,8 @@
 
 Use the academy as a stable path, not as a list of topics to search individually.
 
+Before deep technical phases, check [`PARALLEL_STUDY.md`](PARALLEL_STUDY.md) so missing software-engineering prerequisites are repaired instead of hidden.
+
 For each phase:
 
 1. Learn the native lesson.
