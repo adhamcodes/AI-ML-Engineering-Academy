@@ -45,3 +45,54 @@ jobs:
         run: python -m pip install -r requirements-labs.txt
       - name: Run framework-level lab gates
         run: python scripts/run_framework_tests.py
+
+  mlops-container:
+    name: Build and boot MLOps service container
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Build image
+        run: docker build -t mlops-lab labs/mlops_service
+      - name: Start container
+        run: docker run -d --name mlops-lab -p 8090:8090 mlops-lab
+      - name: Verify health and prediction endpoints
+        run: |
+          python - <<'PY'
+          import json
+          import time
+          import urllib.request
+
+          last_error = None
+          for _ in range(20):
+              try:
+                  with urllib.request.urlopen("http://127.0.0.1:8090/health", timeout=2) as response:
+                      body = json.loads(response.read())
+                      assert response.status == 200, response.status
+                      assert body["status"] == "ok", body
+                      assert body["model_version"], body
+                  request = urllib.request.Request(
+                      "http://127.0.0.1:8090/predict",
+                      data=json.dumps({"x": 3}).encode(),
+                      headers={"Content-Type": "application/json"},
+                      method="POST",
+                  )
+                  with urllib.request.urlopen(request, timeout=2) as response:
+                      body = json.loads(response.read())
+                      assert response.status == 200, response.status
+                      assert body["prediction"] == 7.0, body
+                      assert body["model_version"], body
+                  print("MLOPS CONTAINER: PASS")
+                  break
+              except Exception as exc:
+                  last_error = exc
+                  time.sleep(0.5)
+          else:
+              raise SystemExit(f"container never became healthy: {last_error}")
+          PY
+      - name: Clean up container
+        if: always()
+        run: docker rm -f mlops-lab || true
