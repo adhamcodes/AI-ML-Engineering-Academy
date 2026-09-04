@@ -18,11 +18,42 @@ LABS = [
     "system_design_case", "evidence_audit",
 ]
 LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
+PLACEHOLDER = re.compile(r"\b(?:TODO|TBD|FIXME)\b", re.IGNORECASE)
+SECRET_PATTERNS = [
+    ("private key", re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----")),
+    ("GitHub token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b")),
+    ("AWS access key", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
+    ("API-secret-like token", re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b")),
+]
+TEXT_SUFFIXES = {".md", ".py", ".json", ".yml", ".yaml", ".txt", ".sql", ".html", ".js", ".csv"}
+
+
+def validate_hygiene(errors: list[str]) -> None:
+    for path in sorted(ROOT.rglob("*")):
+        if not path.is_file() or ".git" in path.relative_to(ROOT).parts:
+            continue
+        relative = path.relative_to(ROOT)
+        if path.stat().st_size == 0:
+            errors.append(f"unexpected empty file: {relative}")
+            continue
+        if path.suffix.lower() not in TEXT_SUFFIXES:
+            continue
+        text = path.read_text(encoding="utf-8")
+        if path.suffix.lower() == ".md":
+            match = PLACEHOLDER.search(text)
+            if match:
+                errors.append(f"placeholder marker {match.group(0)!r} in {relative}")
+        for label, pattern in SECRET_PATTERNS:
+            if pattern.search(text):
+                errors.append(f"possible {label} committed in {relative}")
 
 
 def main() -> int:
     errors: list[str] = []
-    for required in ("README.md", "START-HERE.md", "ROADMAP.md", "SELF_STUDY_SYSTEM.md", "LAB_MAP.md"):
+    for required in (
+        "README.md", "START-HERE.md", "ROADMAP.md", "SELF_STUDY_SYSTEM.md",
+        "PARALLEL_STUDY.md", "LAB_MAP.md", "requirements-labs.txt",
+    ):
         if not (ROOT / required).is_file():
             errors.append(f"missing required file: {required}")
     for phase in PHASES:
@@ -52,12 +83,15 @@ def main() -> int:
             if not resolved.exists():
                 errors.append(f"broken local link: {md.relative_to(ROOT)} -> {raw}")
 
+    validate_hygiene(errors)
+
     if errors:
         print("ACADEMY QUALITY: FAIL")
         for error in errors:
             print(" -", error)
         return 1
     print("ACADEMY QUALITY: PASS")
+    print("Verified phase/lab structure, local links, placeholders, empty files, and secret-pattern hygiene.")
     return 0
 
 
