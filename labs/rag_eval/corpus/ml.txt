@@ -1,0 +1,1 @@
+Data leakage occurs when training features or preprocessing contain information that would not be available at prediction time. Leakage can create misleading validation performance and fail in production.

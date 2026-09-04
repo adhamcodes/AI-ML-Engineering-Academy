@@ -1,0 +1,1 @@
+Python virtual environments isolate project dependencies. The standard library venv module can create one. Reproducible projects should record dependency requirements rather than depend on an unknown global environment.

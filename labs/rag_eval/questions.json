@@ -1,0 +1,5 @@
+[
+  {"question": "What command concept shows proposed next-commit changes?", "expected_doc": "git.txt"},
+  {"question": "Why can validation look unrealistically good when future information enters features?", "expected_doc": "ml.txt"},
+  {"question": "What standard-library feature creates isolated Python environments?", "expected_doc": "python.txt"}
+]
