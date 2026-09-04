@@ -13,16 +13,18 @@ concurrency:
 
 jobs:
   validate:
+    name: Validate ${{ matrix.os }} / Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
+        python: ["3.12", "3.14"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python }}
       - name: Validate academy structure and links
         run: python scripts/validate_academy.py
       - name: Run dependency-free lab smoke tests
