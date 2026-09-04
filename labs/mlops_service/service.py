@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import json
+import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 MODEL_VERSION = "tiny-linear-v1"
+HOST = os.getenv("HOST", "127.0.0.1")
+PORT = int(os.getenv("PORT", "8090"))
 
 
 def predict(x: float) -> float:
@@ -43,5 +46,5 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    print("ML service listening on http://127.0.0.1:8090")
-    ThreadingHTTPServer(("127.0.0.1", 8090), Handler).serve_forever()
+    print(f"ML service listening on http://{HOST}:{PORT}")
+    ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
