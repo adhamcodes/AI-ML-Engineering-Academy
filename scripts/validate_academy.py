@@ -18,7 +18,8 @@ LABS = [
     "system_design_case", "evidence_audit",
 ]
 LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
-PLACEHOLDER = re.compile(r"\b(?:TODO|TBD|FIXME)\b", re.IGNORECASE)
+# Match actionable placeholder lines, not prose that merely mentions words such as TODO.
+PLACEHOLDER = re.compile(r"(?im)^\s*(?:[-*]\s*)?(?:TODO|TBD|FIXME)\s*(?::|-|$)")
 SECRET_PATTERNS = [
     ("private key", re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----")),
     ("GitHub token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b")),
@@ -42,7 +43,7 @@ def validate_hygiene(errors: list[str]) -> None:
         if path.suffix.lower() == ".md":
             match = PLACEHOLDER.search(text)
             if match:
-                errors.append(f"placeholder marker {match.group(0)!r} in {relative}")
+                errors.append(f"actionable placeholder in {relative}: {match.group(0).strip()!r}")
         for label, pattern in SECRET_PATTERNS:
             if pattern.search(text):
                 errors.append(f"possible {label} committed in {relative}")
@@ -91,7 +92,7 @@ def main() -> int:
             print(" -", error)
         return 1
     print("ACADEMY QUALITY: PASS")
-    print("Verified phase/lab structure, local links, placeholders, empty files, and secret-pattern hygiene.")
+    print("Verified phase/lab structure, local links, actionable placeholders, empty files, and secret-pattern hygiene.")
     return 0
 
 
