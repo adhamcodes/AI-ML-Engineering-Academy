@@ -11,9 +11,11 @@ This is not a certificate checklist and not a collection of links. The learning 
 ## Start in 60 seconds
 
 1. Open **[START-HERE.md](START-HERE.md)**.
-2. Complete Phase 0 honestly; do not skip the diagnostic because a topic name looks familiar.
-3. Keep your own work and progress outside the canonical curriculum repository. Start from **[PROGRESS_TEMPLATE.md](PROGRESS_TEMPLATE.md)**.
-4. Advance by mastery gates, not by calendar completion.
+2. Read the **[Self-Study Operating System](SELF_STUDY_SYSTEM.md)** once before Phase 0.
+3. Complete Phase 0 honestly; do not skip the diagnostic because a topic name looks familiar.
+4. Use the matching controlled lab from **[LAB_MAP.md](LAB_MAP.md)** as you progress.
+5. Keep your own work and progress outside the canonical curriculum repository. Start from **[PROGRESS_TEMPLATE.md](PROGRESS_TEMPLATE.md)**.
+6. Advance by mastery gates, not by calendar completion.
 
 ## Who this is for
 
@@ -41,11 +43,32 @@ You should have—or build concurrently—normal programming and software-engine
 | [10 — AI System Design](10-ai-system-design/README.md) | architecture and tradeoff reasoning | 4–6 weeks |
 | [11 — Career Engineering](11-career-engineering/README.md) | portfolio, open source, interviews, applications | continuous |
 
-Full detail: **[ROADMAP.md](ROADMAP.md)** · curriculum map: **[CURRICULUM_MAP.md](CURRICULUM_MAP.md)**
+Full detail: **[ROADMAP.md](ROADMAP.md)** · curriculum map: **[CURRICULUM_MAP.md](CURRICULUM_MAP.md)** · executable labs: **[LAB_MAP.md](LAB_MAP.md)**
 
 ## What makes this an academy instead of a roadmap
 
-The repository includes native lessons, curated primary/practice/reference resources, active exercises, debugging and transfer tasks, integrated projects, closed-assistance assessments, remediation loops, mastery gates, portfolio standards, and specialization maps.
+The repository includes native lessons, curated primary/practice/reference resources, active exercises, debugging and transfer tasks, integrated projects, closed-assistance assessments, remediation loops, mastery gates, portfolio standards, specialization maps, and a controlled executable lab layer.
+
+The labs now provide stable data and real systems for the capabilities that previously existed mainly as specifications: leakage diagnosis, broken PyTorch training, tiny transformer implementation, local RAG evaluation, bounded-agent trajectory checks, and production service work.
+
+## Compute policy
+
+The required path is designed for CPU-first study and small controlled experiments. Heavy GPU training is an optional extension, not a graduation requirement.
+
+Optional framework dependencies are listed in [`requirements-labs.txt`](requirements-labs.txt).
+
+## Quality gates
+
+This repository validates its phase structure, local links, and dependency-free lab smoke tests on both Linux and Windows through GitHub Actions.
+
+Run the same checks locally:
+
+```bash
+python scripts/validate_academy.py
+python scripts/run_smoke_tests.py
+```
+
+Framework-specific learner labs have their own contracts/evaluators and are intentionally not solved by CI on your behalf.
 
 ## Employment philosophy
 
