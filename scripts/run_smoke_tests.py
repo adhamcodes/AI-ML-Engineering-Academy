@@ -7,11 +7,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TESTS = [
     ROOT / "labs/math_foundations/test_vector_projection.py",
+    ROOT / "labs/leakage_lab/test_make_dataset.py",
     ROOT / "labs/rag_eval/evaluator.py",
     ROOT / "labs/mlops_service/test_service.py",
 ]
 COMPILE_ONLY = [
-    ROOT / "labs/leakage_lab/make_dataset.py",
     ROOT / "labs/leakage_lab/broken_pipeline.py",
     ROOT / "labs/pytorch_boss_fight/broken_train.py",
     ROOT / "labs/pytorch_boss_fight/evaluator.py",
