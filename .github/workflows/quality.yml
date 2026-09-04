@@ -29,3 +29,19 @@ jobs:
         run: python scripts/validate_academy.py
       - name: Run dependency-free lab smoke tests
         run: python scripts/run_smoke_tests.py
+
+  framework-labs:
+    name: Framework lab red-team / Python 3.12
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-labs.txt
+      - name: Install lab dependencies
+        run: python -m pip install -r requirements-labs.txt
+      - name: Run framework-level lab gates
+        run: python scripts/run_framework_tests.py
