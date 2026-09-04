@@ -21,9 +21,29 @@ COMPILE_ONLY = [
     ROOT / "labs/agent_eval/evaluator.py",
     ROOT / "labs/mlops_service/service.py",
 ]
+EXPECTED_REJECTIONS = [
+    (
+        ROOT / "labs/agent_eval/evaluator.py",
+        ROOT / "labs/agent_eval/broken_agent.py",
+    ),
+]
 
 for test in TESTS:
     subprocess.run([sys.executable, test.name], cwd=test.parent, check=True)
+
 for source in COMPILE_ONLY:
     subprocess.run([sys.executable, "-m", "py_compile", str(source)], check=True)
+
+for evaluator, broken_target in EXPECTED_REJECTIONS:
+    result = subprocess.run(
+        [sys.executable, evaluator.name, broken_target.name],
+        cwd=evaluator.parent,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode == 0:
+        raise RuntimeError(f"Evaluator incorrectly accepted known-broken target: {broken_target}")
+    print(f"EXPECTED REJECTION: {broken_target.relative_to(ROOT)}")
+
 print("LAB SMOKE TESTS: PASS")
