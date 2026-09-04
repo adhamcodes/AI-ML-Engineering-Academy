@@ -1,0 +1,1 @@
+Git records project history as commits. The staging area is an explicit proposed snapshot for the next commit. git diff --staged shows the changes currently staged relative to HEAD.

@@ -1,0 +1,8 @@
+customer_id,segment,age,signup_date,spend
+1,SMB,28,2026-01-02,120.50
+2,smb,31,02/01/2026,85.00
+2,smb,31,02/01/2026,85.00
+3,Enterprise,,2026-02-10,500.00
+4,enterprise,240,2026-02-11,900.00
+5,Consumer,19,2026-13-01,not_recorded
+6,consumer,42,2026-03-05,55.25
